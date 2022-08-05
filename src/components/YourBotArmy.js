@@ -1,40 +1,27 @@
-import React, { useEffect, useState } from "react";
-import YourBotArmy from "./YourBotArmy";
-import BotCollection from "./BotCollection";
+import React from "react";
+import BotCard from "./BotCard"
 
+function YourBotArmy({ bots, removeBot , deleteBot }) {
+  //your bot army code here...
 
-const API = 'http://localhost:8002/bots';
-
-function BotsPage() {
-  //start here with your code for step one
-
-  const [bots, setBots] = useState([]);
-
-  useEffect(() => {
-    fetch(API)
-      .then(res => res.json())
-      .then(setBots);
-  }, []);
-
-  function enlistBot(bot) {
-    setBots(bots.map((b) => (b.id === bot.id ? {...b, enlist: true } : b )));
-  }
-
-  function releaseBot(bot) {
-    setBots(bots.map((b) => (b.id === bot.id ? {...b, enlist: false } : b )));
-  }
-
-  function dischargeBot(bot) {
-    console.log('discharging', bot);
-    setBots(bots.filter((b) => b.id !== bot.id));
-  }
+  const mapBots = bots.map(bot => 
+    <BotCard 
+    key={bot.id}
+    bot={bot}
+    clickEvent={removeBot}
+    deleteBot={deleteBot}
+    />)
 
   return (
-    <div>
-      <YourBotArmy bots={bots.filter(b => b.enlist)} releaseBot={releaseBot} dischargeBot={dischargeBot}/>
-      <BotCollection bots={bots} enlistBot={enlistBot} dischargeBot={dischargeBot}/>
+    <div className="ui segment inverted olive bot-army">
+      <div className="ui five column grid">
+        <div className="row bot-army-row">
+          {mapBots}
+          Your Bot Army
+        </div>
+      </div>
     </div>
-  )
+  );
 }
 
-export default BotsPage;
+export default YourBotArmy;

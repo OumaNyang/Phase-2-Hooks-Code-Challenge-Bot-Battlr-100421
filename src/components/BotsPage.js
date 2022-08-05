@@ -1,38 +1,48 @@
-import React, { useEffect, useState } from "react";
+import React, { useState , useEffect } from "react";
 import YourBotArmy from "./YourBotArmy";
 import BotCollection from "./BotCollection";
 
-
-const API = 'http://localhost:8002/bots';
+const API = "http://localhost:8002/bots";
 
 function BotsPage() {
   //start here with your code for step one
 
   const [bots, setBots] = useState([]);
-
+  
   useEffect(() => {
     fetch(API)
-      .then(res => res.json())
-      .then(setBots);
-  }, []);
+    .then(res => res.json())
+    // .then(json => console.log(json))
+    .then(setBots)
+  },[])
 
-  function enlistBot(bot) {
-    setBots(bots.map((b) => (b.id === bot.id ? {...b, enlist: true } : b )));
+  function enlistBot(bot){
+    console.log(bot);
+    setBots(bots.map(b => b.id === bot.id ? {...b, army:true} : b));
   }
 
-  function releaseBot(bot) {
-    setBots(bots.map((b) => (b.id === bot.id ? {...b, enlist: false } : b )));
+  function removeBot(bot){
+    console.log(bot);
+    setBots(bots.map(b => b.id === bot.id ? {...b, army:false} : b));
   }
 
-  function dischargeBot(bot) {
-    console.log('discharging', bot);
-    setBots(bots.filter((b) => b.id !== bot.id));
+  function deleteBot(bot){
+    // console.log("You're fired.")
+    setBots(bots.filter(b => b.id !== bot.id))
   }
-
   return (
     <div>
-      <YourBotArmy bots={bots.filter(b => b.enlist)} releaseBot={releaseBot} dischargeBot={dischargeBot}/>
-      <BotCollection bots={bots} enlistBot={enlistBot} dischargeBot={dischargeBot}/>
+      <YourBotArmy 
+      bots={bots.filter(b => b.army)}
+      removeBot ={removeBot}
+      deleteBot={deleteBot}
+      />
+
+      <BotCollection 
+      bots={bots}
+      enlistBot={enlistBot}
+      deleteBot={deleteBot}
+      />
     </div>
   )
 }
